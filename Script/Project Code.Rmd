@@ -35,3 +35,25 @@ playoff_teams_2019 %>%
        subtitle = "2019 NWSL Playoff Teams") +
   theme_bw()
 ```
+
+```{r}
+last_three_champs <- nwsl %>%
+  filter((team_id == "NC" & season == 2019) | (team_id == "NC" & season == 2018) | (team_id == "POR" & season == 2017),
+         goals > 0) %>%
+  mutate(g_permatch = goals / matches) %>%
+  group_by(season, team_id) %>%
+  summarise(regseason_goals_per_match = sum(g_permatch))
+```
+
+```{r}
+last_three_champs %>%
+  ggplot(aes(x = season, fill = team_id)) +
+  geom_bar(aes(y = regseason_goals_per_match),
+           stat = "identity") +
+  scale_fill_manual("Teams", values = c( "NC" = "darkblue", 
+                                         "POR" = "darkred")) + 
+  labs(x = "Team", y = "Regular Season Goals per Match",
+       title = "Regular Season Goals per Match",
+       subtitle = "Last Three NWSL Championship Winning Teams") +
+  theme_bw()
+```
