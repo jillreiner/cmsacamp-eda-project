@@ -1,30 +1,37 @@
 ---
 title: "Project Code"
 author: "Jill Reiner"
-date: "6/5/2020"
+date: "6/6/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(ggbeeswarm)
+nwsl <- read.csv("~/Desktop/CMSAC Projects/nwsl_season_stats.csv")
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+playoff_teams_2019 <- nwsl %>%
+  filter(team_id %in% c("NC", "CHI", "POR", "SEA")) %>%
+  group_by(team_id) %>%
+  summarize(total_reg_season_goals = sum(goals))
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+playoff_teams_2019 %>%
+  ggplot(aes(x = team_id, fill = team_id)) +
+  geom_bar(aes(y = total_reg_season_goals),
+           stat = "identity") +
+  scale_fill_manual("Teams", values = c("CHI" = "lightblue", 
+                                         "NC" = "darkblue", 
+                                         "POR" = "darkred",
+                                         "SEA" = "gold")) + 
+  labs(x = "Team", y = "Total Regular Season Goals",
+       title = "Regular Season Goals per Team",
+       subtitle = "2019 NWSL Playoff Teams") +
+  theme_bw()
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
