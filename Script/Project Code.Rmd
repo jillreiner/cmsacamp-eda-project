@@ -102,6 +102,7 @@ team_distribution_2019_nwsl3 %>%
 
 # Same idea as previous plot, just displayed differently
 
+# NC won championship in 2019 and they had a lot of different goal scorers with pretty good goal totals (as opposed to say, CHI, who had one really good goal scorer but the rest of their players were meh), so this may indicate that it is better to have more depth in terms of goal scoring and it doesn't always help the team as a whole to have the leading scorer on their team. Team work makes the dream work!
 
 
 
