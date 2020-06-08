@@ -11,7 +11,8 @@ library(ggplot2)
 library(dplyr)
 library(tidyverse)
 library(ggbeeswarm)
-nwsl <- read.csv("~/Desktop/CMSAC Projects/nwsl_season_stats.csv")
+library(ggridges)
+nwsl <- read.csv("http://www.stat.cmu.edu/cmsac/sure/materials/data/eda_projects/nwsl_season_stats.csv")
 ```
 
 ```{r}
@@ -37,23 +38,67 @@ playoff_teams_2019 %>%
 ```
 
 ```{r}
-last_three_champs <- nwsl %>%
+last_three_champs_full <- nwsl %>%
   filter((team_id == "NC" & season == 2019) | (team_id == "NC" & season == 2018) | (team_id == "POR" & season == 2017),
          goals > 0) %>%
-  mutate(g_permatch = goals / matches) %>%
+  mutate(g_permatch = goals / matches)
+```
+
+```{r}
+last_three_champs_summarized <- last_three_champs_full %>%
   group_by(season, team_id) %>%
   summarise(regseason_goals_per_match = sum(g_permatch))
 ```
 
+# How does a team's goal scoring ability in the regular season reflect in the postseason?
+
+# Over the past three NWSL seasons, championship teams have been scoring more in the regular season, proving to be dominant.
+
 ```{r}
-last_three_champs %>%
+last_three_champs_summarized %>%
   ggplot(aes(x = season, fill = team_id)) +
   geom_bar(aes(y = regseason_goals_per_match),
            stat = "identity") +
   scale_fill_manual("Teams", values = c( "NC" = "darkblue", 
                                          "POR" = "darkred")) + 
-  labs(x = "Team", y = "Regular Season Goals per Match",
+  labs(x = "Season", y = "Regular Season Goals per Match",
        title = "Regular Season Goals per Match",
        subtitle = "Last Three NWSL Championship Winning Teams") +
   theme_bw()
 ```
+
+# Goal distribution by team
+
+```{r}
+team_distribution_2019_nwsl <- nwsl %>%
+  filter(pos %in% c("FW,MF", "DF,MF", "FW", "MF"),
+         season == 2019) %>%
+  group_by(team_id) %>%
+  summarise(total_goals = sum(goals))
+```
+
+# I'm having issues with the geom_density_ridges function
+
+```{r}
+team_distribution_2019_nwsl %>%
+  ggplot(aes(x = total_goals,
+             y = team_id)) +
+  geom_density_ridges() +
+  theme_bw()
+```
+
+# It works fine here but doesn't like my subset maybe (?)
+```{r}
+nwsl %>%
+  ggplot(aes(x = goals,
+             y = team_id)) +
+  geom_density_ridges()
+```
+
+
+
+
+
+
+
+
