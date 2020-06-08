@@ -12,30 +12,35 @@ library(dplyr)
 library(tidyverse)
 library(ggbeeswarm)
 library(ggridges)
+library(forcats)
 nwsl <- read.csv("http://www.stat.cmu.edu/cmsac/sure/materials/data/eda_projects/nwsl_season_stats.csv")
 ```
 
 ```{r}
 playoff_teams_2019 <- nwsl %>%
-  filter(team_id %in% c("NC", "CHI", "POR", "SEA")) %>%
-  group_by(team_id) %>%
-  summarize(total_reg_season_goals = sum(goals))
+  filter(team_id %in% c("NC", "CHI", "POR", "SEA"),
+         season == 2019) %>%
+  mutate(goals_per_match = goals / matches) %>%
+  group_by(team_id, season) %>%
+  summarize(avg_goals_per_match = sum(goals_per_match))
 ```
 
 ```{r}
 playoff_teams_2019 %>%
   ggplot(aes(x = team_id, fill = team_id)) +
-  geom_bar(aes(y = total_reg_season_goals),
+  geom_bar(aes(y = avg_goals_per_match),
            stat = "identity") +
   scale_fill_manual("Teams", values = c("CHI" = "lightblue", 
                                          "NC" = "darkblue", 
                                          "POR" = "darkred",
                                          "SEA" = "gold")) + 
-  labs(x = "Team", y = "Total Regular Season Goals",
-       title = "Regular Season Goals per Team",
+  labs(x = "Team", y = "Average Goals per Match",
+       title = "Regular Season Average Goals per Match",
        subtitle = "2019 NWSL Playoff Teams") +
   theme_bw()
 ```
+
+# Would it be better to do total goals in regular season? Leaning towards average goals per match...
 
 ```{r}
 last_three_champs_full <- nwsl %>%
@@ -103,13 +108,6 @@ team_distribution_2019_nwsl3 %>%
 # Same idea as previous plot, just displayed differently
 
 # NC won championship in 2019 and they had a lot of different goal scorers with pretty good goal totals (as opposed to say, CHI, who had one really good goal scorer but the rest of their players were meh), so this may indicate that it is better to have more depth in terms of goal scoring and it doesn't always help the team as a whole to have the leading scorer on their team. You don't need to have the top goal scorer on your team to win championships. Team work makes the dream work!
-
-
-```{r}
-team_distribution_2019_nwsl4 <- nwsl %>%
-  filter(pos %in% c("FW,MF", "DF,MF", "FW", "MF"),
-         goals > 0)
-```
 
 
 
