@@ -67,37 +67,40 @@ last_three_champs_summarized %>%
   theme_bw()
 ```
 
-# Goal distribution by team
+# Pick between this bar plot and first, can't have 2. We're leaning towards the 1st one, but it's still TBD.
 
 ```{r}
-team_distribution_2019_nwsl <- nwsl %>%
+team_distribution_2019_nwsl3 <- nwsl %>%
   filter(pos %in% c("FW,MF", "DF,MF", "FW", "MF"),
-         season == 2019) %>%
-  group_by(team_id) %>%
-  summarise(total_goals = sum(goals))
+         season == 2019,
+         goals > 0)
 ```
 
-# I'm having issues with the geom_density_ridges function
-
 ```{r}
-team_distribution_2019_nwsl %>%
-  ggplot(aes(x = total_goals,
+team_distribution_2019_nwsl3 %>%
+  ggplot(aes(x = goals,
              y = team_id)) +
   geom_density_ridges() +
+  geom_rug(alpha = .03) + 
+  labs(x = "Goals", y = "Team",
+       title = "Distribution of Goal Scorers per Team",
+       subtitle = "2019 NWSL Regular Season") +
   theme_bw()
 ```
 
-# It works fine here but doesn't like my subset maybe (?)
 ```{r}
-nwsl %>%
+team_distribution_2019_nwsl3 %>%
   ggplot(aes(x = goals,
              y = team_id)) +
-  geom_density_ridges()
+  geom_boxplot() + 
+  labs(x = "Goals", y = "Team",
+       title = "Distribution of Goal Scorers per Team",
+       subtitle = "2019 NWSL Regular Season") +
+  coord_flip() + 
+  theme_bw()
 ```
 
-
-
-
+# Same idea as previous plot, just displayed differently
 
 
 
