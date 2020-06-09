@@ -89,6 +89,7 @@ team_distribution_2019_nwsl3 <- nwsl %>%
 ```
 
 # Hypothesis: Does having the league leading scorer automatically win you championships?
+
 ```{r}
 team_distribution_2019_nwsl3 %>%
   ggplot(aes(x = goals,
