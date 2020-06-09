@@ -1,0 +1,89 @@
+---
+title: "goalspermatch"
+author: "Jill Reiner"
+date: "6/9/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(ggbeeswarm)
+library(ggridges)
+library(forcats)
+nwsl <- read.csv("http://www.stat.cmu.edu/cmsac/sure/materials/data/eda_projects/nwsl_season_stats.csv")
+```
+
+```{r}
+playoff_teams <- nwsl %>%
+  filter(team_id %in% c("NC", "CHI", "POR", "SEA") & season == 2019 |
+         (team_id %in% c("NC", "CHI", "POR", "SEA") & season == 2018) |
+         (team_id %in% c("NC", "CHI", "POR", "ORL") & season == 2017)) %>%
+  mutate(goals_per_match = goals / matches) %>%
+  group_by(team_id, season) %>%
+  summarize(avg_goals_per_match = sum(goals_per_match))
+```
+
+# Hypothesis: Does outscoring teams in the regular season give you an advantage in the postseason? 
+
+# We need to reword our hypothesis here to match what the plot is telling us...we've tried other plots but want to stick to this one, just need to work on the hypothesis.
+
+# Over the past three NWSL seasons, championship teams have been scoring more goals per match in the regular season.
+
+# Would it be helpful to just look at 2018 and 2019? Would it be better to look at all teams instead of just playoff teams? We just need some guidance on this one.
+
+```{r}
+playoff_teams %>%
+  ggplot(aes(x = team_id, fill = team_id)) +
+  geom_bar(aes(y = avg_goals_per_match),
+           stat = "identity") +
+  scale_fill_manual("Teams", values = c("CHI" = "lightblue", 
+                                         "NC" = "darkblue", 
+                                         "POR" = "darkred",
+                                         "SEA" = "gold",
+                                         "ORL" = "purple")) + 
+  labs(x = "Team", y = "Average Goals per Match",
+       title = "Regular Season Average Goals per Match",
+       subtitle = "NWSL Playoff Teams from 2017-2019") +
+  theme_bw() +
+  facet_wrap(~ season, ncol = 3)
+```
+
+```{r}
+last_three_champs_full <- nwsl %>%
+  filter((team_id == "NC" & season == 2019) | (team_id == "NC" & season == 2018) | (team_id == "POR" & season == 2017),
+         goals > 0) %>%
+  mutate(g_permatch = goals / matches)
+```
+
+```{r}
+last_three_champs_summarized <- last_three_champs_full %>%
+  group_by(season, team_id) %>%
+  summarise(regseason_goals_per_match = sum(g_permatch))
+```
+
+# How does a team's goal scoring ability in the regular season reflect in the postseason?
+
+```{r}
+last_three_champs_summarized %>%
+  ggplot(aes(x = season, fill = team_id)) +
+  geom_bar(aes(y = regseason_goals_per_match),
+           stat = "identity") +
+  scale_fill_manual("Teams", values = c( "NC" = "darkblue", 
+                                         "POR" = "darkred")) + 
+  labs(x = "Season", y = "Regular Season Goals per Match",
+       title = "Regular Season Goals per Match",
+       subtitle = "Last Three NWSL Championship Winning Teams") +
+  theme_bw()
+```
+
+# Pick between this bar plot and first, can't have 2. We're leaning towards the 1st one, but it's still TBD.
+
+```{r}
+team_distribution_2019_nwsl3 <- nwsl %>%
+  filter(pos %in% c("FW,MF", "DF,MF", "FW", "MF"),
+         season == 2019,
+         goals > 0)
+```

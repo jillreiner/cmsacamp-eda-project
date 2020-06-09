@@ -1,0 +1,57 @@
+---
+title: "goalscoringdistribution"
+author: "Jill Reiner"
+date: "6/9/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(ggbeeswarm)
+library(ggridges)
+library(forcats)
+nwsl <- read.csv("http://www.stat.cmu.edu/cmsac/sure/materials/data/eda_projects/nwsl_season_stats.csv")
+```
+
+```{r}
+team_distribution_2019_nwsl3 <- nwsl %>%
+  filter(pos %in% c("FW,MF", "DF,MF", "FW", "MF"),
+         season == 2019,
+         goals > 0)
+```
+
+# Hypothesis: Does having the league leading scorer automatically win you championships?
+
+# Reword the hypothesis but same idea.
+```{r}
+team_distribution_2019_nwsl3 %>%
+  ggplot(aes(x = goals,
+             y = team_id)) +
+  geom_density_ridges() +
+  geom_rug(alpha = .03) + 
+  labs(x = "Goals", y = "Team",
+       title = "Distribution of Goal Scorers per Team",
+       subtitle = "2019 NWSL Regular Season") +
+  theme_bw()
+```
+
+```{r}
+team_distribution_2019_nwsl3 %>%
+  ggplot(aes(x = goals,
+             y = team_id)) +
+  geom_boxplot() + 
+  labs(x = "Goals", y = "Team",
+       title = "Distribution of Goal Scorers per Team",
+       subtitle = "2019 NWSL Regular Season") +
+  coord_flip() + 
+  theme_bw()
+```
+
+# Same idea as previous plot, just displayed differently
+
+# NC won championship in 2019 and they had a lot of different goal scorers with pretty good goal totals (as opposed to say, CHI, who had one really good goal scorer but the rest of their players were meh), so this may indicate that it is better to have more depth in terms of goal scoring and it doesn't always help the team as a whole to have the leading scorer on their team. You don't need to have the top goal scorer on your team to win championships. Team work makes the dream work!
+
+
