@@ -30,12 +30,14 @@ team_distribution_2019_nwsl3 <- nwsl %>%
 team_distribution_2019_nwsl3 %>%
   ggplot(aes(x = goals,
              y = team_id)) +
-  geom_density_ridges() +
-  geom_rug(alpha = .03) + 
+  geom_density_ridges(jittered_points = TRUE, position = position_points_jitter(width = 0.05, height = 0), point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) +
   labs(x = "Goals", y = "Team",
        title = "Distribution of Goal Scorers per Team",
        subtitle = "2019 NWSL Regular Season") +
   theme_bw()
+
+
+  geom_density_ridges(jittered_points = TRUE, position = position_points_jitter(width = 0.05, height = 0), point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7)
 ```
 
 ```{r}
