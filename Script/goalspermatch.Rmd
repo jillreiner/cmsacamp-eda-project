@@ -12,7 +12,6 @@ library(dplyr)
 library(tidyverse)
 library(ggbeeswarm)
 library(ggridges)
-library(forcats)
 nwsl <- read.csv("http://www.stat.cmu.edu/cmsac/sure/materials/data/eda_projects/nwsl_season_stats.csv")
 ```
 
@@ -30,9 +29,6 @@ playoff_teams2 <- nwsl %>%
 # We need to reword our hypothesis here to match what the plot is telling us...we've tried other plots but want to stick to this one, just need to work on the hypothesis.
 
 # Over the past three NWSL seasons, championship teams have been scoring more goals per match in the regular season.
-
-# Would it be helpful to just look at 2018 and 2019? Would it be better to look at all teams instead of just playoff teams? We just need some guidance on this one.
-
 
 # Does regular season goal scoring matter when it comes to the playoffs?
 
@@ -55,7 +51,7 @@ playoff_teams2 %>%
        title = "Regular Season Average Goals per Match",
        subtitle = "NWSL Playoff Teams from 2017-2019") +
   theme_bw() +
-  facet_wrap(~ season, ncol = 3)
+  facet_wrap(~ season, ncol = 3, scales = "free_x")
 ```
 
 ```{r}
