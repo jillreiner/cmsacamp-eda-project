@@ -17,13 +17,12 @@ nwsl <- read.csv("http://www.stat.cmu.edu/cmsac/sure/materials/data/eda_projects
 ```
 
 ```{r}
-playoff_teams <- nwsl %>%
+playoff_teams2 <- nwsl %>%
   filter(team_id %in% c("NC", "CHI", "POR", "SEA") & season == 2019 |
          (team_id %in% c("NC", "CHI", "POR", "SEA") & season == 2018) |
          (team_id %in% c("NC", "CHI", "POR", "ORL") & season == 2017)) %>%
-  mutate(goals_per_match = goals / matches) %>%
   group_by(team_id, season) %>%
-  summarize(avg_goals_per_match = sum(goals_per_match))
+  summarize(avg_goals_per_match = sum(goals)/24)
 ```
 
 # Hypothesis: Does outscoring teams in the regular season give you an advantage in the postseason? 
@@ -35,7 +34,7 @@ playoff_teams <- nwsl %>%
 # Would it be helpful to just look at 2018 and 2019? Would it be better to look at all teams instead of just playoff teams? We just need some guidance on this one.
 
 ```{r}
-playoff_teams %>%
+playoff_teams2 %>%
   ggplot(aes(x = team_id, fill = team_id)) +
   geom_bar(aes(y = avg_goals_per_match),
            stat = "identity") +
@@ -54,14 +53,13 @@ playoff_teams %>%
 ```{r}
 last_three_champs_full <- nwsl %>%
   filter((team_id == "NC" & season == 2019) | (team_id == "NC" & season == 2018) | (team_id == "POR" & season == 2017),
-         goals > 0) %>%
-  mutate(g_permatch = goals / matches)
+         goals > 0)
 ```
 
 ```{r}
 last_three_champs_summarized <- last_three_champs_full %>%
   group_by(season, team_id) %>%
-  summarise(regseason_goals_per_match = sum(g_permatch))
+  summarise(regseason_goals_per_match = sum(goals)/24)
 ```
 
 # How does a team's goal scoring ability in the regular season reflect in the postseason?
