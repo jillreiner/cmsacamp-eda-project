@@ -40,13 +40,12 @@ team_distribution_2019_nwsl3 %>%
 
 ```{r}
 team_distribution_2019_nwsl3 %>%
-  ggplot(aes(x = goals,
-             y = team_id)) +
+  ggplot(aes(x = team_id,
+             y = goals)) +
   geom_boxplot() + 
-  labs(x = "Goals", y = "Team",
+  labs(x = "Team", y = "Goals",
        title = "Distribution of Goal Scorers per Team",
        subtitle = "2019 NWSL Regular Season") +
-  coord_flip() + 
   theme_bw()
 ```
 
