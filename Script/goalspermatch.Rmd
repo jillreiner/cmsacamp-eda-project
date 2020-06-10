@@ -33,6 +33,9 @@ playoff_teams2 <- nwsl %>%
 
 # Would it be helpful to just look at 2018 and 2019? Would it be better to look at all teams instead of just playoff teams? We just need some guidance on this one.
 
+
+# Does regular season goal scoring matter when it comes to the playoffs?
+
 ```{r}
 playoff_teams2 %>%
   ggplot(aes(x = team_id, fill = team_id)) +
@@ -42,7 +45,12 @@ playoff_teams2 %>%
                                          "NC" = "darkblue", 
                                          "POR" = "darkred",
                                          "SEA" = "gold",
-                                         "ORL" = "purple")) + 
+                                         "ORL" = "purple"),
+                             labels = c("Chicago Red Stars", 
+                                        "North Carolina Courage", 
+                                        "Orlando Pride", 
+                                        "Portland Thorns FC", 
+                                        "Reign FC")) + 
   labs(x = "Team", y = "Average Goals per Match",
        title = "Regular Season Average Goals per Match",
        subtitle = "NWSL Playoff Teams from 2017-2019") +
